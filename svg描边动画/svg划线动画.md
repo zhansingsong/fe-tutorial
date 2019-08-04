@@ -6,7 +6,7 @@
 
 ## svg 描边属性 stroke
 
-在 svg 中对图形（line、polyline、rect、circle、ellipse、polygon）、路径（path）、文本(text、textPath、tspan)的描边需要用到`stroke`属性。
+在 svg 中对图形（line、polyline、rect、circle、ellipse、polygon）、路径（path）、文本(text、textPath、tspan)的描边都需要用到`stroke`属性。
 
 ### stroke 常用属性
 
@@ -120,6 +120,7 @@
 ### 动画原理
 
 随着时间的变化，通过控制 `stroke-dashoffset` 来控制 `stroke-dasharray` 开始的偏移量的变化，以到达动画效果。[演示实例](http://htmlpreview.github.io/?https://github.com/zhansingsong/fe-tutorials/blob/master/svg描边动画/demo/animation_js.html)。
+>singsong：通常会将 `stroke-dasharray` 设置为路径总长度。如总长度为`s`，`stroke-dasharray: s`或`stroke-dasharray: s s`。再将 `stroke-dashoffset` 取值从 `s` 变化到 `0`，就可实现从无到有的描边动画。
 
 ![animation](https://raw.githubusercontent.com/zhansingsong/fe-tutorials/master/svg%E6%8F%8F%E8%BE%B9%E5%8A%A8%E7%94%BB/imgs/animation.gif)
 

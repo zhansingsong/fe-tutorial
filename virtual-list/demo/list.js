@@ -58,6 +58,8 @@ class List {
     });
     // 填充 fragment
     this.scroller.appendChild(fragment);
+    console.log('总条数：', this.scroller.children.length);
+
   }
 
   bindEvent() {
@@ -70,7 +72,7 @@ class List {
         return;
       }
       // 第一次 或 触发距离
-      if (init || self.scrollHeight - scrollTop - self.containerHeight <=
+      if (!init || self.scroller.clientHeight - scrollTop - self.containerHeight <=
           self.config.triggerDistance
       ) {
         self.pending = true;
@@ -83,6 +85,6 @@ class List {
     };
     this.element.addEventListener('scroll', onScroll, false);
     // 初始化
-    onScroll(true);
+    onScroll();
   }
 }

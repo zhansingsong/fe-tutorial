@@ -142,6 +142,7 @@ class VList {
     });
     // 更新 currentTotal
     this.currentTotal = this.currentIndex + 1;
+    console.log('总条数：', this.currentTotal);
     this.computeScrollHeight();
     this.renderChunk(this.element.scrollTop);
   }

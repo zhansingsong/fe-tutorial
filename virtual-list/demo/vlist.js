@@ -1,24 +1,6 @@
 /**
- * 1. 提供指定 scroll-container 的 height，作为优化配置项。减少每次的重新计算的消耗
- * 2. 为了确保在滚动时，准备好显示内容。需要基于 Frame 来检测。
- *    - window.requestAnimationFrame()
- *    - window.cancelAnimationFrame()
- *    上述检测方式，对大数据量及计算量大的情景不是很友好。还是需要scroll+requestAnimationFrame+setTimeout方式是最佳
- *    检测条件
- *    - 初始化
- *    - 向上滚动
- *    - 向下滚动距离大于平均一个item height
- * 3. 刷新逻辑
- *    - 合并 config
- *    - 验证 config
- *    - 挂载 element
- *    - 设置 element 样式
- *    - 设置滚动容器的样式
- * 4. 渲染逻辑
- *
- *
- * 映射关系
- * data ---> itemsHeights ---> itemsPositions
+ * * 映射关系
+ *  data ---> itemsHeights ---> itemsPositions
  *
  */
 
@@ -75,10 +57,9 @@ const utils = {
 
 class VList {
   constructor(element = window, url, config = {}) {
-    const defaultConfig = {
-      // width: '100%',
-      // height: '100%',
-    };
+    // 默认配置
+    const defaultConfig = {};
+    // 请求URL
     this.url = url;
     // 页面中容器
     this.element = element;
@@ -101,23 +82,23 @@ class VList {
     // 已有的items
     this.cacheItems = [];
     // 当前总数
-    this.currentTotal = -1;
+    this.currentTotal = 0;
+    // 当前的Index
+    this.currentIndex = -1;
+    // 请求标识
     this.pending = false;
+    // 初始化状态
     this.initState();
   }
 
   initState() {
-    this.scroller = this.scroller || document.createElement('div');
+    // 滚动容器
+    this.scroller = document.createElement('div');
     this.element.appendChild(this.scroller);
+    // 绑定事件
     this.bindEvent();
-    // utils.mergeStyle(this.element, {
-    //   width: `${this.config.width}`,
-    //   height: `${this.config.height}`,
-    //   position: 'relative',
-    // });
-
-    // const scrollerHeight = this.config.itemHeight * this.config.total;
   }
+  // 查找起始点
   getFrom(scrollTop) {
     let i = 0;
     while (this.itemsPositions[i] < scrollTop) {
@@ -125,86 +106,101 @@ class VList {
     }
     return i;
   }
+  // 渲染chunk
   renderChunk(scrollTop) {
-    const total = this.currentTotal + 1;
+    // total
+    const total = this.currentIndex;
     let from = this.getFrom(scrollTop) - 1;
+    // 小于 0 或不够一屏都置为 0
     if (from < 0 || from - this.screenItemsLen < 0) {
       from = 0;
     }
+    // 缓存上次起始点
     this.lastFrom = from;
+    // 计算结束点
     let to = from + this.cachedItemsLen;
+    // 大于 total 或 不够最后一屏都置为 total
     if (to > total || to + this.cachedItemsLen > total) {
       to = total;
     }
+    // fragment
     const fragment = document.createDocumentFragment();
-    // for (let i = from; i < to; i++) {
-    //   let item = getItem(i);
-    //   fragment.appendChild(item);
-    // }
-    const tempItems = this.cacheItems.slice(from, to);
-    tempItems.forEach((itemEl) => {
+    // 获取当前 items
+    const currentItems = this.cacheItems.slice(from, to);
+    currentItems.forEach((itemEl) => {
       fragment.appendChild(itemEl);
-    })
-    // fragment.appendChild.apply(fragment, this.cacheItems.slice(from, to));
+    });
+    // 填充 fragment
     this.scroller.innerHTML = '';
     this.scroller.appendChild(fragment);
   }
-
+  // 更新
   update(data) {
+    // 填充新数据
     data.forEach(itemData => {
-      this.getItem(itemData, ++this.currentTotal);
+      this.getItem(itemData, ++this.currentIndex);
     });
+    // 更新 currentTotal
+    this.currentTotal = this.currentIndex + 1;
     this.computeScrollHeight();
     this.renderChunk(this.element.scrollTop);
   }
 
   getItem(itemData, i) {
+    // 优先从缓存获取
     if (this.cacheItems[i]) {
       return this.cacheItems[i];
     }
+    // 生成对应item
     let item = this.config.generateItem(itemData, i);
+    // 缓存itemsHeights
     this.itemsHeights[i] = item.height;
+    // 第一个不用计算，默认为 0
     if (i > 0) {
       this.itemsPositions[i] =
         this.itemsHeights[i - 1] + this.itemsPositions[i - 1];
     }
-
-    const top = this.itemsPositions[i];
-
+    // 增加定位样式
     utils.mergeStyle(item.el, {
       position: 'absolute',
-      top: `${top}px`,
+      top: `${this.itemsPositions[i]}px`,
     });
+    // 更新 cacheItems
     this.cacheItems.push(item.el);
-    return item.el;
   }
 
   computeScrollHeight() {
+    // 计算总高度
     const scrollHeight = this.itemsHeights.reduce((a, b) => a + b, 0);
-    const averageHeight = Math.floor(scrollHeight / (this.currentTotal + 1));
+    // 计算平均高度
+    const averageHeight = Math.floor(scrollHeight / this.currentTotal);
+    // 计算一屏的个数
     const screenItemsLen = Math.ceil(this.containerHeight / averageHeight);
     this.averageHeight = averageHeight;
     this.screenItemsLen = screenItemsLen;
     this.scrollHeight = scrollHeight;
+    // 每次缓存的个数
     this.cachedItemsLen = Math.floor(
       Math.max(this.cachedItemsLen || 0, screenItemsLen * 2)
     );
-
+    // 更新滚动容器样式
     utils.mergeStyle(this.scroller, {
       position: 'absolute',
       height: `${scrollHeight}px`,
       width: '100%',
     });
   }
+
   bindEvent() {
     const self = this;
     // 可以使用 requestAnimationFrame 进行节流
     const onScroll = function(event) {
       const scrollTop = self.element.scrollTop;
+      // 控制请求
       if (self.pending) {
         return;
       }
-      console.log('vvvvv12');
+      // 第一次 或 触发距离
       if (
         !self.lastRepaint ||
         self.scrollHeight - scrollTop - self.containerHeight <=
@@ -216,19 +212,16 @@ class VList {
           self.pending = false;
         });
       }
-      console.log('vvvvv1');
       if (scrollTop === self.lastRepaint) {
         return;
       }
-      console.log('vvvvv');
       const diff = self.lastRepaint ? scrollTop - self.lastRepaint : 0;
       if (!self.lastRepaint || diff < 0 || diff > self.averageHeight) {
         self.renderChunk(scrollTop);
         self.lastRepaint = scrollTop;
       }
     };
-    this.element.onscroll = onScroll;
-    // this.element.addEventListener('scroll', onScroll, false);
+    this.element.addEventListener('scroll', onScroll, false);
     // 初始化
     onScroll();
   }

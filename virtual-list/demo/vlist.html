@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>VList</title>
+</head>
+<body>
+  <style>
+    *{
+      padding: 0;
+      margin: 0;
+    }
+    html,
+    body{
+      height: 100%;
+      overflow: hidden;
+    }
+    .type1{
+      width: 100%;
+      height: 100px;
+      background: rgb(233, 104, 104);
+    }
+    .type2{
+      width: 100%;
+      height: 200px;
+      background: rgb(76, 201, 76);
+    }
+    .type3{
+      width: 100%;
+      height: 300px;
+      background: rgb(75, 75, 156);
+    }
+    .container{
+      position: relative;
+      width: 800px;
+      margin: 0 auto;
+      height: 100%;
+      overflow: auto;
+    }
+  </style>
+  <section class="container">
+
+  </section>
+  <script src="vlist.js"></script>
+  <script>
+    const heights = [0, 100, 200, 300]
+    const vlist = new VList(document.querySelector('.container'), '/data.json', {
+      triggerDistance: 200,
+      generateItem: function(itemData, i){
+        const item = document.createElement('div');
+        item.innerHTML = itemData.text;
+        item.className = `type${itemData.type}`;
+        const height = heights[itemData.type];
+        return {el: item, height};
+      }
+    });
+
+  </script>
+</body>
+</html>

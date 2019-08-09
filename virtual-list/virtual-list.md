@@ -3,7 +3,7 @@
 ![](./img/window-diagram.jpg)
 
 第一次了解这项技术是通过 [react-virtualized](https://bvaughn.github.io/react-virtualized/) 组件。当时就大概了解了一下，没有深入研究。近期刚好有时间折腾了一下，想将其技术对现有项目进行优化，就对其技术研究了一番。有点收获，就整理一了一下，与大家分享分享。
-> singsong: react-virtualized 的作者已对 react-virtualized 进行重写。并重新构建新为 [react-window](https://github.com/bvaughn/react-window)。
+> singsong: react-virtualized 的作者已对 react-virtualized 进行重写。并重新构建为 [react-window](https://github.com/bvaughn/react-window)。
 
 ## 背景
 

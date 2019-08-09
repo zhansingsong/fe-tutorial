@@ -194,33 +194,41 @@ class VList {
 
   bindEvent() {
     const self = this;
-    // 可以使用 requestAnimationFrame 进行节流
+    let ticking = false;
+    
+    // 使用 requestAnimationFrame 进行节流
     const onScroll = function(event) {
-      const scrollTop = self.element.scrollTop;
-      // 控制请求
-      if (self.pending) {
-        return;
-      }
-      // 第一次 或 触发距离
-      if (
-        !self.lastRepaint ||
-        self.scrollHeight - scrollTop - self.containerHeight <=
-          self.config.triggerDistance
-      ) {
-        self.pending = true;
-        utils.getUrl(self.url, function(data) {
-          self.update(data.data);
-          self.pending = false;
+      if (!ticking) {
+        window.requestAnimationFrame(function() {
+          ticking = false;
+          const scrollTop = self.element.scrollTop;
+          // 控制请求
+          if (self.pending) {
+            return;
+          }
+          // 第一次 或 触发距离
+          if (
+            !self.lastRepaint ||
+            self.scrollHeight - scrollTop - self.containerHeight <=
+              self.config.triggerDistance
+          ) {
+            self.pending = true;
+            utils.getUrl(self.url, function(data) {
+              self.update(data.data);
+              self.pending = false;
+            });
+          }
+          if (scrollTop === self.lastRepaint) {
+            return;
+          }
+          const diff = self.lastRepaint ? scrollTop - self.lastRepaint : 0;
+          if (!self.lastRepaint || diff < 0 || diff > self.averageHeight) {
+            self.renderChunk(scrollTop);
+            self.lastRepaint = scrollTop;
+          }
         });
       }
-      if (scrollTop === self.lastRepaint) {
-        return;
-      }
-      const diff = self.lastRepaint ? scrollTop - self.lastRepaint : 0;
-      if (!self.lastRepaint || diff < 0 || diff > self.averageHeight) {
-        self.renderChunk(scrollTop);
-        self.lastRepaint = scrollTop;
-      }
+      ticking = true;
     };
     this.element.addEventListener('scroll', onScroll, false);
     // 初始化

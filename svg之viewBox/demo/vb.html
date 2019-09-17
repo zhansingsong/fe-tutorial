@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>viewBox</title>
+</head>
+
+<body>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .title {
+            position: absolute;
+            top: 20px;
+            width: 100%;
+            text-align: center;
+            font-size: 30px;
+        }
+
+        .svg-container {
+            margin: 60px auto 0;
+            position: relative;
+            height: 600px;
+            width: 600px;
+            /* background-color: aliceblue; */
+            background: url(./dd.svg) no-repeat center;
+            border: 1px solid rgb(184, 203, 214);
+            transform: translateZ(0);
+        }
+
+        .controls {
+            position: fixed;
+            padding: 10px;
+            top: 120px;
+            left: 50%;
+            margin-left: 320px;
+        }
+
+        .controls h4 {
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        .controls input {
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        svg{
+            position: relative;
+            left: 10px;
+            top: 10px;
+            height: 580px;
+            width: 580px;
+            transform: translateZ(0);
+        }
+        svg rect {
+            /* fill: #4CAF50; */
+        }
+        .intro{
+            position: relative;
+            width: 600px;
+            margin: 40px auto 0;
+            line-height: 26px;
+        }
+        .intro p {
+            margin-bottom: 20px;
+        }
+        .intro img{
+            vertical-align: bottom;
+        }
+        .intro strong{
+            color: brown;
+            font-size: 20px;
+            margin-right: 20px;
+        }
+        .intro strong:last-child{
+            margin-right: 0;
+        }
+        .intro i{
+            font-style: italic;
+            font-weight: 700;
+        }
+        .svg-vb{
+            background-color: rgba(222, 10, 242, 0.5);
+            height: 200px;
+            width: 200px;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            text-align: center;
+            border-width: 1px;
+            border-style: solid;
+            border-color: transparent rgb(79, 195, 247) rgb(79, 195, 247) transparent;
+            background: rgba(255, 255, 255, 0.3);
+            box-sizing: border-box;
+        }
+        .svg-vb i{
+            position: absolute;
+            font-size: 20px;
+            color: rgb(79, 195, 247);
+            line-height: 20px;
+            bottom: 2px;
+            right: 2px;
+        }
+        .svg-rect{
+            background-color: #8BC34A;
+            height: 200px;
+            width: 200px;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 20px;
+            text-align: center;
+            line-height: 200px;
+        }
+        p strong{
+            color: rgb(226, 46, 196);
+        }
+    </style>
+    <h3 class="title">viewBox</h3>
+    <div class="svg-container" id="container">
+        <div class="svg-rect"><i>rect</i></div>
+        <div class="svg-vb"><i>viewBox</i></div>
+        <svg class="js-vb" viewBox="5 5 200 200" height="600" width="600" preserveAspectRatio="xMidYMid meet">
+            <!-- <image class="js-fake-vb" xlink:href="./da.svg" x="5" y="5" width="200" height="200" /> -->
+            <!-- <rect x="5" y="5" width="200" height="200" fill="rgba(2, 166, 242, 0.5)"/> -->
+            <!-- <rect x="5" y="5" class="js-fake-bg-vb" width="200" height="200" fill="rgba(222, 10, 242, 0.5)"/> -->
+        </svg>
+    </div>
+    <div class="svg-container" style="margin-top: 20px;">
+        <svg class="js-vb" viewBox="5 5 200 200" height="600" width="600" preserveAspectRatio="xMidYMid meet">
+            <!-- <image class="js-fake-vb" xlink:href="./da.svg" x="5" y="5" width="200" height="200" /> -->
+            <image xlink:href="./dd.svg" x="5" y="5" height="580" width="580"/>
+            <rect x="5" y="5" width="200" height="200" fill="#8BC34A"/>
+            <text x="87" y="114" font-size="20">rect</text>
+            <!-- <rect x="5" y="5" class="js-fake-bg-vb" width="200" height="200" fill="rgba(222, 10, 242, 0.5)"/> -->
+        </svg>
+    </div>
+    <div class="controls" id="controls">
+        <h4>viewBox 大小</h4>
+        <input type="range" step="10" class="js-vb-range" max="580" min="10">
+        <p>viewBox: <strong class="js-val">5 5 200 200</strong></p>
+        <p>preserveAspectRatio: <strong>xMidYMid meet</strong> </p>
+    </div>
+    <!-- <div class="intro">
+        <p>
+            <img src="./dd.svg" alt="dd" height="80" width="80"> 表示 <strong>viewport</strong>
+            <img src="./da.svg" alt="dd" height="80" width="120"> 表示 <strong>viewBox</strong>
+        </p>
+        <p>
+        </p>
+        <p>图中的 9 个点表示：<i>xMinYMin</i>、<i>xMidYMin</i>、<i>xMaxYMin</i>、<i>xMinYMid</i>、<i>xMidYMid</i>、<i>xMaxYMid</i>、<i>xMinYMax</i>、<i>xMidYMax</i>、<i>xMaxYMax</i></p>
+    </div> -->
+
+    <script>
+        const viewBoxElements = document.querySelectorAll('.js-vb');
+        const viewBoxFakeElement = document.querySelector('.js-fake-vb');
+        const viewBoxFakeBgElement = document.querySelector('.svg-vb');
+        const rangeOfViewBoxSize = document.querySelector('.js-vb-range');
+        const viewBoxValue = document.querySelector('.js-val');
+        rangeOfViewBoxSize.addEventListener('input', function(){
+            // console.log(rangeOfViewBoxSize.value,  viewBoxElement.viewBox)
+            viewBoxElements.forEach(i => i.setAttribute('viewBox', `5 5 ${rangeOfViewBoxSize.value} ${rangeOfViewBoxSize.value}`))
+            // viewBoxElement.setAttribute('viewBox', `5 5 ${rangeOfViewBoxSize.value} ${rangeOfViewBoxSize.value}`);
+            viewBoxFakeBgElement.style.width = rangeOfViewBoxSize.value + 'px';
+            viewBoxFakeBgElement.style.height = rangeOfViewBoxSize.value + 'px';
+            viewBoxValue.innerHTML = `5 5 ${rangeOfViewBoxSize.value} ${rangeOfViewBoxSize.value}`;
+            // viewBoxFakeElement.setAttribute('width', rangeOfViewBoxSize.value);
+            // viewBoxFakeElement.setAttribute('height', rangeOfViewBoxSize.value / 1.5);
+        }, false);
+    </script>
+</body>
+
+</html>

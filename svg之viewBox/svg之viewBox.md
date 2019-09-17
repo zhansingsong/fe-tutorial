@@ -14,4 +14,6 @@ svg元素都有个 viewport，即视图窗口。viewport 的大小由 svg 元素
 
 ## viewBox
 
-view
+一个用于控制 SVG viewport 如何显示的属性
+
+为什么需要 viewBox ？

@@ -28,7 +28,8 @@
             position: relative;
             height: 600px;
             width: 600px;
-            background-color: aliceblue;
+            /* background-color: aliceblue; */
+            background: url(./dd.svg) no-repeat center;
             border: 1px solid rgb(184, 203, 214);
         }
 
@@ -41,6 +42,7 @@
         }
 
         .controls h4 {
+            margin-top: 10px;
             margin-bottom: 10px;
         }
 
@@ -48,20 +50,50 @@
             margin-right: 10px;
             margin-bottom: 10px;
         }
-
+        svg{
+            position: relative;
+            left: 10px;
+            top: 10px;
+            height: 580px;
+            width: 580px;
+        }
         svg rect {
-            fill: #4CAF50;
+            /* fill: #4CAF50; */
+        }
+        .intro{
+            position: relative;
+            width: 600px;
+            margin: 40px auto 0;
+            line-height: 26px;
+        }
+        .intro p {
+            margin-bottom: 20px;
+        }
+        .intro img{
+            vertical-align: bottom;
+        }
+        .intro strong{
+            color: brown;
+            font-size: 20px;
+            margin-right: 20px;
+        }
+        .intro strong:last-child{
+            margin-right: 0;
+        }
+        .intro i{
+            font-style: italic;
+            font-weight: 700;
         }
     </style>
     <h3 class="title">viewBox</h3>
     <div class="svg-container" id="container">
-        <svg viewBox="0 0 300 300" height="600" width="600" preserveAspectRatio="none">
-            <rect x="0" y="0" width="200" height="200" />
+        <svg viewBox="5 5 300 200" height="600" width="600" preserveAspectRatio="none">
+            <image xlink:href="./da.svg" x="5" y="5" height="200" width="300"/>
         </svg>
     </div>
     <div class="controls" id="controls">
         <h4>preserveAspectRatio</h4>
-        <div><input type="radio" id="off" name="off" value="off"><label for="off">无 preserveAspectRatio</label></div>
+        <div><input type="radio" id="off" name="off" value="off"><label for="off">无 preserveAspectRatio，就会取默认值 "xMidYMid meet"</label></div>
         <h4>align</h4>
         <div class="align">
             <div><input type="radio" id="align1" name="align" value="none"><label for="align1">none</label></div>
@@ -90,6 +122,16 @@
                     for="ms1">meet（默认值）</label></div>
             <div><input type="radio" id="ms2" name="ms" value="slice"><label for="ms2">slice</label></div>
         </div>
+    </div>
+    <div class="intro">
+        <p>
+            <img src="./dd.svg" alt="dd" height="80" width="80"> 表示 <strong>viewport</strong>
+            <img src="./da.svg" alt="dd" height="80" width="120"> 表示 <strong>viewBox</strong>
+        </p>
+        <p>
+        </p>
+        <p>图中的 9 个点表示：<i>xMinYMin</i>、<i>xMidYMin</i>、<i>xMaxYMin</i>、<i>xMinYMid</i>、<i>xMidYMid</i>、<i>xMaxYMid</i>、<i>xMinYMax</i>、<i>xMidYMax</i>、<i>xMaxYMax</i></p>
+        
     </div>
 
     <script>

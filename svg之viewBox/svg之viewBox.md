@@ -1,7 +1,7 @@
 # 一个演示让你轻松了解 viewBox 如何工作
 
 
-[演示链接](http://htmlpreview.github.io/?https://github.com/zhansingsong/fe-tutorials/blob/master/svg%E4%B9%8BviewBox/demo/vb_diff.html)
+[演示链接](http://htmlpreview.github.io/?https://github.com/zhansingsong/fe-tutorials/blob/master/svg%E4%B9%8BviewBox/demo/viewBoxDemo.html)
 
 ## viewport
 
